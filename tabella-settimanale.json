@@ -1,0 +1,44 @@
+[
+  {
+    "giorno": "Sab",
+    "pranzo": "tagliata di pollo insalata e patatine",
+    "cena": "pizza",
+    "mattia": ""
+  },
+  {
+    "giorno": "Dom",
+    "pranzo": "lasagne al pesto e pasta con broccoletti",
+    "cena": "",
+    "mattia": ""
+  },
+  {
+    "giorno": "Lun",
+    "pranzo": "avanzi pasta lunedì e pasta al ragù",
+    "cena": "petto di pollo insalata e carote Filippo torna alle 21",
+    "mattia": "pasta al ragù"
+  },
+  {
+    "giorno": "Mar",
+    "pranzo": "uova e carote o pasta per Filippo che torna alle 14 + D'ambros",
+    "cena": "pizza e pagnottella",
+    "mattia": "filetto di pesce e crocchette"
+  },
+  {
+    "giorno": "Mer",
+    "pranzo": "riso bianco o risotti",
+    "cena": "straccetti x 2 patate e carote Filippo torna alle 20",
+    "mattia": "fish & chips"
+  },
+  {
+    "giorno": "Giov",
+    "pranzo": "pizzoccheri e pasta",
+    "cena": "lonza impanata patatine e peperoni",
+    "mattia": "Pasta pomodoro o pesto"
+  },
+  {
+    "giorno": "Ven",
+    "pranzo": "pizza surgelata o uova / Filippo 12-18",
+    "cena": "piadine - Annalisa in pizzeria",
+    "mattia": "focaccia pollo o prosciutto"
+  }
+]
