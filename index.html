@@ -296,5 +296,61 @@
             }, 3000);
         }
     </script>
+<!-- Firebase SDK -->
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyBAYtQvHfbdM5ANaGpEf2BFs27f-o8Ksq4",
+    authDomain: "tabella-settimanale.firebaseapp.com",
+    projectId: "tabella-settimanale",
+    storageBucket: "tabella-settimanale.firebasestorage.app",
+    messagingSenderId: "480484245776",
+    appId: "1:480484245776:web:d8858ccc975375d50d3995",
+    measurementId: "G-FMWYCJ7DK2",
+    databaseURL: "https://tabella-settimanale-default-rtdb.firebaseio.com" // Aggiungi questa riga
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  // Funzione per salvare dati su Firebase
+  window.salvaDatiSuFirebase = function() {
+    const dati = {};
+    const celle = document.querySelectorAll('td[contenteditable="true"]');
+    
+    celle.forEach(cella => {
+      dati[cella.id] = cella.textContent;
+    });
+    
+    set(ref(db, 'tabella'), dati);
+    alert("Dati salvati correttamente!");
+  };
+
+  // Funzione per caricare dati da Firebase
+  window.caricaDatiDaFirebase = function() {
+    onValue(ref(db, 'tabella'), (snapshot) => {
+      const dati = snapshot.val();
+      if (dati) {
+        const celle = document.querySelectorAll('td[contenteditable="true"]');
+        celle.forEach(cella => {
+          const id = cella.id;
+          if (dati[id]) {
+            cella.textContent = dati[id];
+          }
+        });
+      }
+    });
+  };
+
+  // Carica i dati all'avvio
+  window.addEventListener('DOMContentLoaded', function() {
+    caricaDatiDaFirebase();
+  });
+</script>
 </body>
 </html>
