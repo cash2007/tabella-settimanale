@@ -9,6 +9,42 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
+           <tr>
+    <td class="day-header">Sab</td>
+    <td contenteditable="true" id="sab-pranzo"></td>
+    <td contenteditable="true" id="sab-cena"></td>
+    <td contenteditable="true" id="sab-mattia"></td>
+</tr>
+<tr>
+    <td class="day-header">Dom</td>
+    <td contenteditable="true" id="dom-pranzo"></td>
+    <td contenteditable="true" id="dom-cena"></td>
+    <td contenteditable="true" id="dom-mattia"></td>
+</tr>
+<!-- E così via per gli altri giorni -->// Salva dati
+document.getElementById('saveData').addEventListener('click', function() {
+    saveTableData(); // Mantieni la funzione localStorage
+    salvaDatiSuFirebase(); // Aggiungi questa riga per salvare su Firebase
+    showStatus('Dati salvati con successo', 'success');
+});
+
+// Carica dati
+document.getElementById('loadData').addEventListener('click', function() {
+    caricaDatiDaFirebase(); // Usa la funzione Firebase
+    showStatus('Dati caricati con successo', 'success');
+});// Aggiungi questa funzione
+window.cancellaDatiSuFirebase = function() {
+    set(ref(db, 'tabella'), null);
+};
+
+// Modifica l'event listener del pulsante resetData
+document.getElementById('resetData').addEventListener('click', function() {
+    if (confirm("Sei sicuro di voler cancellare tutti i dati della tabella?")) {
+        resetTableData();
+        cancellaDatiSuFirebase(); // Aggiungi questa riga
+        showStatus('Tabella reimpostata', 'success');
+    }
+});
             background-color: #f0f8ff; /* Sfondo azzurro chiaro */
         }
         .container {
