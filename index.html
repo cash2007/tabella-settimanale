@@ -9,43 +9,7 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-           <tr>
-    <td class="day-header">Sab</td>
-    <td contenteditable="true" id="sab-pranzo"></td>
-    <td contenteditable="true" id="sab-cena"></td>
-    <td contenteditable="true" id="sab-mattia"></td>
-</tr>
-<tr>
-    <td class="day-header">Dom</td>
-    <td contenteditable="true" id="dom-pranzo"></td>
-    <td contenteditable="true" id="dom-cena"></td>
-    <td contenteditable="true" id="dom-mattia"></td>
-</tr>
-<!-- E così via per gli altri giorni -->// Salva dati
-document.getElementById('saveData').addEventListener('click', function() {
-    saveTableData(); // Mantieni la funzione localStorage
-    salvaDatiSuFirebase(); // Aggiungi questa riga per salvare su Firebase
-    showStatus('Dati salvati con successo', 'success');
-});
-
-// Carica dati
-document.getElementById('loadData').addEventListener('click', function() {
-    caricaDatiDaFirebase(); // Usa la funzione Firebase
-    showStatus('Dati caricati con successo', 'success');
-});// Aggiungi questa funzione
-window.cancellaDatiSuFirebase = function() {
-    set(ref(db, 'tabella'), null);
-};
-
-// Modifica l'event listener del pulsante resetData
-document.getElementById('resetData').addEventListener('click', function() {
-    if (confirm("Sei sicuro di voler cancellare tutti i dati della tabella?")) {
-        resetTableData();
-        cancellaDatiSuFirebase(); // Aggiungi questa riga
-        showStatus('Tabella reimpostata', 'success');
-    }
-});
-            background-color: #f0f8ff; /* Sfondo azzurro chiaro */
+            background-color: #f0f8ff;
         }
         .container {
             max-width: 100%;
@@ -60,8 +24,6 @@ document.getElementById('resetData').addEventListener('click', function() {
         h1 {
             text-align: center;
             color: #4682B4;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
         }
         table {
             width: 100%;
@@ -79,29 +41,9 @@ document.getElementById('resetData').addEventListener('click', function() {
             color: white;
             font-weight: bold;
         }
-        .day-header {
-            background-color: #5F9EA0;
-            color: white; /* Mantengo il bianco ma lo rendo più visibile con l'ombra */
-            font-weight: bold;
-            text-shadow: 1px 1px 1px rgba(0,0,0,0.5); /* Aggiunta ombra per migliorare leggibilità */
-            font-size: 1.1em; /* Leggermente più grande */
-        }
-        tr:nth-child(even) td {
-            background-color: #E6F3FF;
-        }
-        tr:nth-child(odd) td {
-            background-color: #F0F8FF;
-        }
         td[contenteditable="true"] {
             cursor: pointer;
-        }
-        td[contenteditable="true"]:hover {
-            background-color: #FFFACD;
-        }
-        td[contenteditable="true"]:focus {
-            background-color: #FFFFE0;
-            outline: 2px solid #FFD700;
-            box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+            background-color: #f9f9f9;
         }
         .actions {
             margin-top: 20px;
@@ -109,284 +51,142 @@ document.getElementById('resetData').addEventListener('click', function() {
         }
         button {
             padding: 10px 15px;
-            margin: 0 5px;
+            margin: 5px;
             background-color: #4682B4;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         button:hover {
             background-color: #5F9EA0;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        .status {
-            margin-top: 15px;
-            padding: 10px;
-            text-align: center;
-            display: none;
-            border-radius: 4px;
-        }
-        .status.success {
-            background-color: #dff0d8;
-            color: #3c763d;
-            display: block;
-            border: 1px solid #d6e9c6;
-        }
-        .status.error {
-            background-color: #f2dede;
-            color: #a94442;
-            display: block;
-            border: 1px solid #ebccd1;
-        }
-        @media (max-width: 768px) {
-            table {
-                font-size: 14px;
-            }
-            td, th {
-                padding: 8px;
-            }
-            h1 {
-                font-size: 24px;
-            }
-            button {
-                padding: 8px 12px;
-                font-size: 14px;
-                margin-bottom: 10px;
-            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Tabella Settimanale</h1>
-        <div id="tableContainer">
-            <table id="editableTable">
-                <thead>
-                    <tr>
-                        <th>Giorno</th>
-                        <th>Pranzo</th>
-                        <th>Cena</th>
-                        <th>Mattia</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="day-header">Sab</td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                    </tr>
-                    <tr>
-                        <td class="day-header">Dom</td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                    </tr>
-                    <tr>
-                        <td class="day-header">Lun</td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                    </tr>
-                    <tr>
-                        <td class="day-header">Mar</td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                    </tr>
-                    <tr>
-                        <td class="day-header">Mer</td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                    </tr>
-                    <tr>
-                        <td class="day-header">Giov</td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                    </tr>
-                    <tr>
-                        <td class="day-header">Ven</td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <table id="editableTable">
+            <thead>
+                <tr>
+                    <th>Giorno</th>
+                    <th>Pranzo</th>
+                    <th>Cena</th>
+                    <th>Mattia</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="day-header">Sab</td>
+                    <td contenteditable="true" id="sab-pranzo"></td>
+                    <td contenteditable="true" id="sab-cena"></td>
+                    <td contenteditable="true" id="sab-mattia"></td>
+                </tr>
+                <tr>
+                    <td class="day-header">Dom</td>
+                    <td contenteditable="true" id="dom-pranzo"></td>
+                    <td contenteditable="true" id="dom-cena"></td>
+                    <td contenteditable="true" id="dom-mattia"></td>
+                </tr>
+                <tr>
+                    <td class="day-header">Lun</td>
+                    <td contenteditable="true" id="lun-pranzo"></td>
+                    <td contenteditable="true" id="lun-cena"></td>
+                    <td contenteditable="true" id="lun-mattia"></td>
+                </tr>
+                <tr>
+                    <td class="day-header">Mar</td>
+                    <td contenteditable="true" id="mar-pranzo"></td>
+                    <td contenteditable="true" id="mar-cena"></td>
+                    <td contenteditable="true" id="mar-mattia"></td>
+                </tr>
+                <tr>
+                    <td class="day-header">Mer</td>
+                    <td contenteditable="true" id="mer-pranzo"></td>
+                    <td contenteditable="true" id="mer-cena"></td>
+                    <td contenteditable="true" id="mer-mattia"></td>
+                </tr>
+                <tr>
+                    <td class="day-header">Gio</td>
+                    <td contenteditable="true" id="gio-pranzo"></td>
+                    <td contenteditable="true" id="gio-cena"></td>
+                    <td contenteditable="true" id="gio-mattia"></td>
+                </tr>
+                <tr>
+                    <td class="day-header">Ven</td>
+                    <td contenteditable="true" id="ven-pranzo"></td>
+                    <td contenteditable="true" id="ven-cena"></td>
+                    <td contenteditable="true" id="ven-mattia"></td>
+                </tr>
+            </tbody>
+        </table>
         <div class="actions">
             <button id="saveData">Salva Dati</button>
             <button id="loadData">Carica Dati</button>
             <button id="resetData">Cancella Tutto</button>
         </div>
-        <div id="statusMessage" class="status"></div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Carica dati salvati al caricamento della pagina
-            loadTableData();
-            
-            // Salva dati
-            document.getElementById('saveData').addEventListener('click', function() {
-                saveTableData();
-                showStatus('Dati salvati con successo', 'success');
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "API_KEY",
+            authDomain: "tabella-settimanale.firebaseapp.com",
+            databaseURL: "https://tabella-settimanale-default-rtdb.firebaseio.com",
+            projectId: "tabella-settimanale",
+            storageBucket: "tabella-settimanale.appspot.com",
+            messagingSenderId: "480484245776",
+            appId: "1:480484245776:web:d8858ccc975375d50d3995"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Salvataggio dati su Firebase
+        document.getElementById('saveData').addEventListener('click', function() {
+            const dati = {};
+            document.querySelectorAll('td[contenteditable="true"]').forEach(cella => {
+                dati[cella.id] = cella.textContent;
             });
-            
-            // Carica dati
-            document.getElementById('loadData').addEventListener('click', function() {
-                if (loadTableData()) {
-                    showStatus('Dati caricati con successo', 'success');
-                } else {
-                    showStatus('Nessun dato salvato trovato', 'error');
-                }
-            });
-            
-            // Cancella tutto
-            document.getElementById('resetData').addEventListener('click', function() {
-                if (confirm("Sei sicuro di voler cancellare tutti i dati della tabella?")) {
-                    resetTableData();
-                    showStatus('Tabella reimpostata', 'success');
-                }
+            set(ref(db, 'tabella'), dati).then(() => {
+                alert("Dati salvati con successo!");
             });
         });
-        
-        // Funzione per salvare i dati della tabella
-        function saveTableData() {
-            const table = document.getElementById('editableTable');
-            const tbody = table.querySelector('tbody');
-            const rows = tbody.querySelectorAll('tr');
-            
-            const tableData = [];
-            
-            rows.forEach((row, index) => {
-                const cells = row.querySelectorAll('td');
-                const dayName = cells[0].textContent;
-                tableData.push({
-                    giorno: dayName,
-                    pranzo: cells[1].textContent,
-                    cena: cells[2].textContent,
-                    mattia: cells[3].textContent
-                });
+
+        // Caricamento dati da Firebase
+        function caricaDatiDaFirebase() {
+            onValue(ref(db, 'tabella'), (snapshot) => {
+                const dati = snapshot.val();
+                if (dati) {
+                    document.querySelectorAll('td[contenteditable="true"]').forEach(cella => {
+                        if (dati[cella.id]) {
+                            cella.textContent = dati[cella.id];
+                        }
+                    });
+                }
             });
-            
-            localStorage.setItem('weeklyTableData', JSON.stringify(tableData));
         }
-        
-        // Funzione per caricare i dati della tabella
-        function loadTableData() {
-            const savedData = localStorage.getItem('weeklyTableData');
-            
-            if (savedData) {
-                const tableData = JSON.parse(savedData);
-                const table = document.getElementById('editableTable');
-                const tbody = table.querySelector('tbody');
-                const rows = tbody.querySelectorAll('tr');
-                
-                tableData.forEach((rowData, index) => {
-                    if (index < rows.length) {
-                        const cells = rows[index].querySelectorAll('td');
-                        cells[1].textContent = rowData.pranzo;
-                        cells[2].textContent = rowData.cena;
-                        cells[3].textContent = rowData.mattia;
-                    }
+
+        document.getElementById('loadData').addEventListener('click', caricaDatiDaFirebase);
+
+        // Reset dati
+        document.getElementById('resetData').addEventListener('click', function() {
+            if (confirm("Sei sicuro di voler cancellare tutti i dati della tabella?")) {
+                remove(ref(db, 'tabella')).then(() => {
+                    document.querySelectorAll('td[contenteditable="true"]').forEach(cella => {
+                        cella.textContent = "";
+                    });
+                    alert("Tabella resettata con successo!");
                 });
-                
-                return true;
             }
-            
-            return false;
-        }
-        
-        // Funzione per reimpostare la tabella
-        function resetTableData() {
-            const table = document.getElementById('editableTable');
-            const tbody = table.querySelector('tbody');
-            const rows = tbody.querySelectorAll('tr');
-            
-            rows.forEach(row => {
-                const cells = row.querySelectorAll('td[contenteditable="true"]');
-                cells.forEach(cell => {
-                    cell.textContent = "";
-                });
-            });
-            
-            localStorage.removeItem('weeklyTableData');
-        }
-        
-        // Funzione per mostrare messaggi di stato
-        function showStatus(message, type) {
-            const statusElement = document.getElementById('statusMessage');
-            statusElement.textContent = message;
-            statusElement.className = 'status ' + type;
-            
-            // Nascondi il messaggio dopo 3 secondi
-            setTimeout(() => {
-                statusElement.className = 'status';
-            }, 3000);
-        }
-    </script>
-<!-- Firebase SDK -->
-<script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyBAYtQvHfbdM5ANaGpEf2BFs27f-o8Ksq4",
-    authDomain: "tabella-settimanale.firebaseapp.com",
-    projectId: "tabella-settimanale",
-    storageBucket: "tabella-settimanale.firebasestorage.app",
-    messagingSenderId: "480484245776",
-    appId: "1:480484245776:web:d8858ccc975375d50d3995",
-    measurementId: "G-FMWYCJ7DK2",
-    databaseURL: "https://tabella-settimanale-default-rtdb.firebaseio.com" // Aggiungi questa riga
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-
-  // Funzione per salvare dati su Firebase
-  window.salvaDatiSuFirebase = function() {
-    const dati = {};
-    const celle = document.querySelectorAll('td[contenteditable="true"]');
-    
-    celle.forEach(cella => {
-      dati[cella.id] = cella.textContent;
-    });
-    
-    set(ref(db, 'tabella'), dati);
-    alert("Dati salvati correttamente!");
-  };
-
-  // Funzione per caricare dati da Firebase
-  window.caricaDatiDaFirebase = function() {
-    onValue(ref(db, 'tabella'), (snapshot) => {
-      const dati = snapshot.val();
-      if (dati) {
-        const celle = document.querySelectorAll('td[contenteditable="true"]');
-        celle.forEach(cella => {
-          const id = cella.id;
-          if (dati[id]) {
-            cella.textContent = dati[id];
-          }
         });
-      }
-    });
-  };
 
-  // Carica i dati all'avvio
-  window.addEventListener('DOMContentLoaded', function() {
-    caricaDatiDaFirebase();
-  });
-</script>
+        // Caricare i dati all'avvio
+        window.addEventListener('DOMContentLoaded', caricaDatiDaFirebase);
+    </script>
 </body>
 </html>
